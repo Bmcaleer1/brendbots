@@ -1,6 +1,6 @@
 import pyrosim.pyrosim as pyrosim
 
-pyrosim.Start_SDF("box.sdf")
+pyrosim.Start_SDF("worlds.sdf")
 start = 1
 sizes = [start * (0.9 ** i) for i in range(10)]
 
