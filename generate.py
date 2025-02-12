@@ -32,12 +32,20 @@ def Create_Robot():
 
     pyrosim.Start_URDF("body.urdf")
 
-    pyrosim.Send_Cube(name="Torso", pos=[0.5, y, 0.5], size=[length, width, height])
-    pyrosim.Send_Cube(name="BackLeg", pos=[x, y, z], size=[length, width, height])
-    pyrosim.Send_Joint(name="BackLeg_Torso", parent="BackLeg", child="Torso", type="revolute",
-                       position=[x + 0.5, y, z + 0.5])
-    pyrosim.Send_Joint(name="Torso_FrontLeg", parent="Torso", child="FrontLeg", type="revolute", position=[1, 0, 0])
-    pyrosim.Send_Cube(name="FrontLeg", pos=[0.5, 0, -0.5], size=[length, width, height])
+    # torso - root link
+    pyrosim.Send_Cube(name="Torso", pos=[1.5, 0, 1.5], size=[1, 1, 1])
+
+    # torso_backleg - joint
+    pyrosim.Send_Joint(name="Torso_BackLeg", parent="Torso", child="BackLeg", type="revolute", position=[1, 0, 1])
+
+    # back leg - link
+    pyrosim.Send_Cube(name="BackLeg", pos=[-0.5, 0, -0.5], size=[1, 1, 1])
+
+    # torso_frontleg - joint
+    pyrosim.Send_Joint(name="Torso_FrontLeg", parent="Torso", child="FrontLeg", type="revolute", position=[2, 0, 1])
+
+    # front leg - link
+    pyrosim.Send_Cube(name="FrontLeg", pos=[0.5, 0, -0.5], size=[1, 1, 1])
     pyrosim.End()
 
 

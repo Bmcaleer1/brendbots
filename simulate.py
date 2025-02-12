@@ -23,10 +23,11 @@ for i in range(0,1000):
   p.stepSimulation()
   backLegSensorValues[i] = pyrosim.Get_Touch_Sensor_Value_For_Link("BackLeg") #Checks for touch on BackLeg
   frontLegSensorValues[i] = pyrosim.Get_Touch_Sensor_Value_For_Link("FrontLeg")
+  print(f"Step {i}: BackLeg = {backLegSensorValues[i]}, FrontLeg = {frontLegSensorValues[i]}")
 
   time.sleep(1/60)
 
-np.save('brendbots/data/backleg_values.npy', backLegSensorValues)
-np.save('brendbots/data/frontleg_values.npy', frontLegSensorValues)
+np.save('data/backleg_values.npy', backLegSensorValues)
+np.save('data/frontleg_values.npy', frontLegSensorValues)
 p.disconnect()
 print(backLegSensorValues)
