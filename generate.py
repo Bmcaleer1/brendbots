@@ -1,38 +1,45 @@
 import pyrosim.pyrosim as pyrosim
 
 
-
 def Create_World():
-    pyrosim.Start_SDF("world.sdf")
-    pyrosim.Send_Cube(
-        name="Box",
-        pos=[-3, 2, 0.5],  # Position at the origin
-        size=[1, 1, 1]    # Size of the cube
-    )
+    pyrosim.Start_SDF("world.sdf")  # start new SDF file
+
+    # Cube initial Position
+    x = 2
+    y = 2
+    z = 0.5
+
+    # Setting initial block size
+    length = 1
+    width = 1
+    height = 1
+
+    pyrosim.Send_Cube(name="Box", pos=[x, y, z], size=[length, width, height])
+
     pyrosim.End()
 
 
 def Create_Robot():
+    # Robot initial Position
+    x = 0.5
+    y = 0
+    z = 0.5
+
+    # Setting initial Torso size
+    length = 1
+    width = 1
+    height = 1
+
     pyrosim.Start_URDF("body.urdf")
 
-    # Main body segment
-    pyrosim.Send_Cube(name="Base", pos=[1.5, 0, 1.5], size=[1, 1, 1])
-
-    # Joint connecting the base to the rear limb
-    pyrosim.Send_Joint(name="Base_RearJoint", parent="Base", child="RearLeg", type="revolute", position=[1, 0, 1])
-
-    # Rear limb segment
-    pyrosim.Send_Cube(name="RearLeg", pos=[-0.5, 0, -0.5], size=[1, 1, 1])
-
-    # Joint linking the base to the front limb
-    pyrosim.Send_Joint(name="Base_FrontJoint", parent="Base", child="FrontLeg", type="revolute", position=[2, 0, 1])
-
-    # Front limb segment
-    pyrosim.Send_Cube(name="FrontLeg", pos=[0.5, 0, -0.5], size=[1, 1, 1])
-
-    # Finalize and save the robot structure
+    pyrosim.Send_Cube(name="Torso", pos=[0.5, y, 0.5], size=[length, width, height])
+    pyrosim.Send_Cube(name="BackLeg", pos=[x, y, z], size=[length, width, height])
+    pyrosim.Send_Joint(name="BackLeg_Torso", parent="BackLeg", child="Torso", type="revolute",
+                       position=[x + 0.5, y, z + 0.5])
+    pyrosim.Send_Joint(name="Torso_FrontLeg", parent="Torso", child="FrontLeg", type="revolute", position=[1, 0, 0])
+    pyrosim.Send_Cube(name="FrontLeg", pos=[0.5, 0, -0.5], size=[length, width, height])
     pyrosim.End()
 
 
-Create_Robot()
 Create_World()
+Create_Robot()

@@ -1,27 +1,32 @@
-import pybullet_data
 import pybullet as p
-import time
+import pybullet_data
 import pyrosim.pyrosim as pyrosim
+import time
 import numpy as np
+import os
 
-physicsClient = p.connect(p.GUI)
-p.setAdditionalSearchPath(pybullet_data.getDataPath())
+physicsClient = p.connect(p.GUI)    #Connecting to physics engine
+p.setAdditionalSearchPath(pybullet_data.getDataPath())  #To load URDF files i think
 
-p.setGravity(0,0,-9.8)
+planeId = p.loadURDF("plane.urdf")  #create floor
 robotId = p.loadURDF("body.urdf")
-planeId = p.loadURDF("plane.urdf")
+p.setGravity(0,0,-9.8)  #set gravity to -9.8
+
 p.loadSDF("world.sdf")
 pyrosim.Prepare_To_Simulate(robotId)
-backLegSensorValues = np.zeros(100)
-frontLegSensorValues = np.zeros(100)
-for i in range(100):
-	p.stepSimulation()
-	backLegSensorValues[i] = pyrosim.Get_Touch_Sensor_Value_For_Link("Link1")
-	frontLegSensorValues[i] = pyrosim.Get_Touch_Sensor_Value_For_Link("Link2")
-	time.sleep(1/60)
+backLegSensorValues = np.zeros(1000)
+frontLegSensorValues = np.zeros(1000)
 
-np.save('data/back_leg_sensor_values.npy', backLegSensorValues)
-np.save('data/front_leg_sensor_values.npy', frontLegSensorValues)
+
+
+for i in range(0,1000):
+  p.stepSimulation()
+  backLegSensorValues[i] = pyrosim.Get_Touch_Sensor_Value_For_Link("BackLeg") #Checks for touch on BackLeg
+  frontLegSensorValues[i] = pyrosim.Get_Touch_Sensor_Value_For_Link("FrontLeg")
+
+  time.sleep(1/60)
+
+np.save('brendbots/data/backleg_values.npy', backLegSensorValues)
+np.save('brendbots/data/frontleg_values.npy', frontLegSensorValues)
 p.disconnect()
 print(backLegSensorValues)
-print(frontLegSensorValues)
