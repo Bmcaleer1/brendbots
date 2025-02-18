@@ -23,7 +23,7 @@ for i in range(0,1000):
   p.stepSimulation()
   backLegSensorValues[i] = pyrosim.Get_Touch_Sensor_Value_For_Link("BackLeg") #Checks for touch on BackLeg
   frontLegSensorValues[i] = pyrosim.Get_Touch_Sensor_Value_For_Link("FrontLeg")
-  print(f"Step {i}: BackLeg = {backLegSensorValues[i]}, FrontLeg = {frontLegSensorValues[i]}")
+  print(f"Step {i}: BackLeg = {backLegSensorValues[i]}")
 
   time.sleep(1/60)
 
