@@ -1,20 +1,17 @@
-import constants as c
+
 import numpy as np
+import constants as c
 from pyrosim import pyrosim
 
-class SENSOR:
-    """
-    An object that allows the robot to know if it is in contact wiht something
-    """
-    def __init__(self, link_name):
-        self.link_name = link_name
-        self.values = np.zeros(c.STEPS)
+class SENSOR():
+    def __init__(self, linkName):
+        self.linkName = linkName
+        self.values = np.zeros(c.sim_steps)
+        pass
 
-    def Get_Value(self, t):
-        """
-        Gets the value of the sensor and stores it in a dictionary
-        """
-        self.values[t] = pyrosim.Get_Touch_Sensor_Value_For_Link(self.link_name)
+    def Get_Value(self, index):
+        self.values[index] = pyrosim.Get_Touch_Sensor_Value_For_Link(self.linkName)
+        pass
 
     def Save_Values(self):
-        np.save(f'data/{self.link_name}_sensor_values.npy', self.values)
+        np.save(f"data/{self.linkName}_SensorValues.npy", self.values)

@@ -1,19 +1,16 @@
 import numpy as np
 
-STEPS = 1000
+pi = np.pi
 
-AMPLITUDE_BL = np.pi/4
-FREQUENCY_BL = 1
-PHASE_OFFSET_BL = 0
+sim_steps = 1000
+time_step = 1/100 # sleeps 1/240 seconds per loop
 
-AMPLITUDE_FL = np.pi/4
-FREQUENCY_FL = 1
-PHASE_OFFSET_FL = np.pi
+# Back leg motor controls
+BackLeg_amplitude = np.pi
+BackLeg_frequency = 1
+BackLeg_phaseOffset = 0
 
-GRAV_X = 0
-GRAV_Y = 0
-GRAV_Z = -9.8
-
-MAX_FORCE = 20
-
-SLEEP_TIME = 0.005
+# Front leg motor controls
+FrontLeg_amplitude = np.pi
+FrontLeg_frequency = 1
+FrontLeg_phaseOffset = np.pi/2

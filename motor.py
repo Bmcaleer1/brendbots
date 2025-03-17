@@ -1,38 +1,39 @@
+
 import constants as c
 import numpy as np
-import pybullet as p
 from pyrosim import pyrosim
+import pybullet as p
 
-
-class MOTOR:
-    def __init__(self, joint_name):
-        self.joint_name = joint_name
+class MOTOR():
+    def __init__(self, jointName):
+        self.jointName = jointName.decode("utf-8") if isinstance(jointName, bytes) else jointName
         self.Prepare_To_Act()
 
     def Prepare_To_Act(self):
-        self.AMPLITUDE = c.AMPLITUDE_BL
-        self.FREQUENCY = c.FREQUENCY_BL
-        self.OFFSET = c.PHASE_OFFSET_BL
+        self.amplitude = c.BackLeg_amplitude
+        self.frequency = c.BackLeg_frequency
+        self.offset = c.BackLeg_phaseOffset
 
-        if self.joint_name == "Torso_FrontLeg":
-            frequency = self.FREQUENCY / 4
-        else:
-            frequency = self.FREQUENCY
+        if self.jointName == "Torso_BackLeg":
+            self.frequency =  self.frequency / 2
 
-        i_vals = np.arange(c.STEPS)
-        self.motor_values = self.AMPLITUDE * np.sin(2 * np.pi * frequency * i_vals / c.STEPS + self.OFFSET)
+        motorValues = np.linspace(0, 2*np.pi, c.sim_steps)
+        self.motorValues = self.amplitude * np.sin(self.frequency * motorValues + self.offset)
 
-    def Set_Value(self, t, robot_id):
-        self.robot_id = robot_id
-        target_position = self.motor_values[t]
+    def Set_Value(self, robot, desiredAngle):
+        # Find the joint index
+        joint_index = next((j for j in range(p.getNumJoints(robot))
+                            if p.getJointInfo(robot, j)[1].decode("utf-8") == self.jointName), None)
 
-        pyrosim.Set_Motor_For_Joint(
-            bodyIndex=self.robot_id,
-            jointName=self.joint_name,
-            controlMode=p.POSITION_CONTROL,
-            targetPosition=target_position,
-            maxForce=c.MAX_FORCE,
-        )
+        if joint_index is not None:
+            p.setJointMotorControl2(
+                bodyIndex=robot,
+                jointIndex=joint_index,
+                controlMode=p.POSITION_CONTROL,
+                targetPosition=desiredAngle,  # Use desiredAngle directly
+                force=25  # Adjust force if necessary
+            )
+
 
     def Save_Values(self):
-        np.save(f'data/{self.joint_name}_motor_values.npy', self.values)
+        np.save(f"data/{self.jointName}_MotorValues.npy", self.motorValues)

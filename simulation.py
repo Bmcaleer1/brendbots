@@ -1,3 +1,5 @@
+
+
 import constants as c
 import pybullet as p
 import pybullet_data
@@ -12,7 +14,7 @@ class SIMULATION:
         self.physics_client = p.connect(p.GUI)
         p.configureDebugVisualizer(p.COV_ENABLE_GUI, 0)
         p.setAdditionalSearchPath(pybullet_data.getDataPath())
-        p.setGravity(c.GRAV_X, c.GRAV_Y, c.GRAV_Z)
+        p.setGravity(0, 0, -9.8)
 
         self.world = WORLD()
         self.robot = ROBOT()
@@ -21,8 +23,9 @@ class SIMULATION:
         p.disconnect()
 
     def Run(self):
-        for i in range(c.STEPS):
+        for i in range(1000):
             p.stepSimulation()
             self.robot.Sense(i)
+            self.robot.Think()
             self.robot.Act(i)
-            time.sleep(c.SLEEP_TIME)
+            time.sleep(1/100)
