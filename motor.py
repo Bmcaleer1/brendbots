@@ -1,4 +1,3 @@
-
 import constants as c
 import numpy as np
 from pyrosim import pyrosim
@@ -15,7 +14,7 @@ class MOTOR():
         self.offset = c.BackLeg_phaseOffset
 
         if self.jointName == "Torso_BackLeg":
-            self.frequency =  self.frequency / 2
+            self.frequency =  self.frequency / 2  
 
         motorValues = np.linspace(0, 2*np.pi, c.sim_steps)
         self.motorValues = self.amplitude * np.sin(self.frequency * motorValues + self.offset)

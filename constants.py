@@ -3,7 +3,7 @@ import numpy as np
 pi = np.pi
 
 sim_steps = 1000
-time_step = 1/100 # sleeps 1/240 seconds per loop
+time_step = 1/10000
 
 # Back leg motor controls
 BackLeg_amplitude = np.pi

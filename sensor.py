@@ -1,4 +1,3 @@
-
 import numpy as np
 import constants as c
 from pyrosim import pyrosim
