@@ -1,16 +1,13 @@
-import numpy as np
+import numpy
 
-pi = np.pi
+RUNTIME = 500
+GRAVITY = -9.8
+TIME_STEP = 1/120
 
-sim_steps = 1000
-time_step = 1/10000
+numberOfGenerations = 10
 
-# Back leg motor controls
-BackLeg_amplitude = np.pi
-BackLeg_frequency = 1
-BackLeg_phaseOffset = 0
+MOTOR_MAX_FORCE = 1000
 
-# Front leg motor controls
-FrontLeg_amplitude = np.pi
-FrontLeg_frequency = 1
-FrontLeg_phaseOffset = np.pi/2
+amplitude = numpy.pi/4
+frequency = 10
+phaseOffset = 0

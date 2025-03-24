@@ -1,47 +1,45 @@
-
 import pybullet as p
-from pyrosim import pyrosim
-import constants as c
-import numpy as np
-from motor import MOTOR
-from sensor import SENSOR
+import pybullet_data
+import pyrosim.pyrosim as pyrosim
 from pyrosim.neuralNetwork import NEURAL_NETWORK
+
+from sensor import SENSOR
+from motor import MOTOR
 
 class ROBOT():
     def __init__(self):
-        self.nn = NEURAL_NETWORK("data/brain.nndf")
-        self.bodyID = p.loadURDF("data/body.urdf")
-        pyrosim.Prepare_To_Simulate(self.bodyID)
-
-        self.Prepare_To_Sense()
-        self.Prepare_To_Act()
+        self.sensors = {}
+        self.motors = {}
+        self.robot = p.loadURDF("body.urdf")
+        self.nn = NEURAL_NETWORK("brain.nndf")
 
     def Prepare_To_Sense(self):
-        self.sensors = {}
         for linkName in pyrosim.linkNamesToIndices:
-           # if linkName != "Torso":  # Skip non-sensing parts
             self.sensors[linkName] = SENSOR(linkName)
 
-    def Sense(self, current_time_step):
-        for sensor in self.sensors.values():
-            sensor.Get_Value(current_time_step)
-
     def Prepare_To_Act(self):
-        self.motors = {}
         for jointName in pyrosim.jointNamesToIndices:
-            self.motors[jointName.decode("utf-8")] = MOTOR(jointName)
+            self.motors[jointName] = MOTOR(jointName)
+
+    def Sense(self, t):
+        for sens in self.sensors.values():
+            sens.Get_Value(t)
 
     def Think(self):
         self.nn.Update()
-        self.nn.Print()
 
-    def Act(self, current_time_step):
+    def Act(self):
         for neuronName in self.nn.Get_Neuron_Names():
             if self.nn.Is_Motor_Neuron(neuronName):
-                jointName = self.nn.Get_Motor_Neurons_Joint(neuronName)
+                jointName = self.nn.Get_Motor_Neurons_Joint(neuronName).encode("utf-8")
                 desiredAngle = self.nn.Get_Value_Of(neuronName)
-                self.motors[jointName].Set_Value(self.bodyID, desiredAngle)
-                print(f"Motor Neuron {neuronName} is controlling joint {jointName} with desired angle {desiredAngle}.")
+                self.motors[jointName].Set_Value(self.robot, desiredAngle)
 
-       # for motor in self.motors.values():
-          # motor.Set_Value(self.bodyID, current_time_step)
+    def Get_Fitness(self):
+        stateOfLinkZero = p.getLinkState(self.robot,0)
+        positionOfLinkZero = stateOfLinkZero[0]
+        xCoordinateOfLinkZero = positionOfLinkZero[0]
+
+        f = open("fitness.txt", "w")
+        f.write(str(xCoordinateOfLinkZero))
+        f.close()

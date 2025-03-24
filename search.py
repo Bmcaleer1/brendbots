@@ -1,8 +1,7 @@
 import os
+import pybullet
+from hillclimber import HILLCLIMBER
 
-num_simulations = 5
-
-for i in range(num_simulations):
-    os.system("python generate.py")
-
-    os.system("python simulate.py")
+hc = HILLCLIMBER()
+hc.Evolve()
+hc.Show_Best()

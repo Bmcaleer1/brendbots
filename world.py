@@ -1,9 +1,8 @@
 import pybullet as p
+import pybullet_data
+import pyrosim.pyrosim as pyrosim
 
-class WORLD:
-    """
-    Loads a world and a plane for the simulation
-    """
+class WORLD():
     def __init__(self):
+        self.planeId = p.loadURDF("plane.urdf")
         p.loadSDF("world.sdf")
-        self.plane_id = p.loadURDF("plane.urdf")
